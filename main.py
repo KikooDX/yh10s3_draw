@@ -6,21 +6,47 @@ from PIL import Image
 def image_read(path):
     image = Image.open(image_path)
     content = image.tobytes()
-    return content
+    width, height = image.size
+    if width != height:
+        raise ValueError("Image should be a square.")
+    return content, width
+
+def conf_read(project_path):
+    content = ""
+    objects_ids = []
+    with open(project_path + "/conf.txt", "r") as file:
+        content = file.read()
+    content = content.split("\n")
+    del content[0]
+    for line in content:
+        if line and line[0] != '#':
+            objects_ids += [int(line)]
+    return len(objects_ids), objects_ids
+
+# constants
+BASE_X = 128
+MAX_X = 368
+WIDTH = MAX_X - BASE_X + 16
 
 output = "[save]\n"
 id = 0
-image_path = input("Image to open (q to stop)\n> ") + ".bmp"
+project_path = input("Project to open\n> ")
+max_img, objects_ids = conf_read(project_path)
+img = 1
 
-while image_path != "q.bmp":
+while img <= max_img:
+    image_path = f"{project_path}/{img}.bmp"
+
     # starting positions
-    BASE_X = 144
-    MAX_X = 352
     x = BASE_X
-    y = 32
+    y = 16
 
-    content = image_read(image_path)
-    object_to_draw = int(input("Object to draw (75 is block)\n> "))
+    content, step = image_read(image_path) # step is image width
+    step = WIDTH / step
+    if step == int(step):
+        step = int(step)
+
+    object_to_draw = objects_ids[img - 1]
 
     # draw
     for c in content:
@@ -28,14 +54,19 @@ while image_path != "q.bmp":
         if (c):
             output += "{0}0={3}\n{0}1={1}\n{0}2={2}\n".format(id, x, y, object_to_draw)
             id += 1
-        x += 16
-        if x > MAX_X:
-            y += 16
+        x += step
+        if step < 16:
+            if x > MAX_X + step:
+                y += step
+                x = BASE_X
+        elif x > MAX_X:
+            y += step
             x = BASE_X
-    image_path = input("Image to open (q to stop)\n> ") + ".bmp"
+
+    img += 1
 
 # write
-output_path = input("Save as\n> ") + ".yh10s3"
+output_path = project_path + ".yh10s3"
 with open(output_path, "w") as file:
     file.write(output)
 

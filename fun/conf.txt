@@ -1,0 +1,23 @@
+# 1- solid
+75
+
+# 2- glue
+100
+
+# 3- 2x gravity
+105
+
+# 4- 0.5x gravity
+106
+
+# 5- spike
+78
+
+# 6- entrance
+77
+
+# 7- exit
+76
+
+# 8- timer reset
+110

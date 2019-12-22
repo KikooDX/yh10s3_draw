@@ -56,7 +56,7 @@ while img <= max_img:
             id += 1
         x += step
         if step < 16:
-            if x > MAX_X + step:
+            if x > MAX_X + 15.9:
                 y += step
                 x = BASE_X
         elif x > MAX_X:

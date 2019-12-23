@@ -23,14 +23,27 @@ def conf_read(project_path):
             objects_ids += [int(line)]
     return len(objects_ids), objects_ids
 
+def infos_read(project_path):
+    content = ""
+    infos = "[levelinfo]\n"
+    with open(project_path + "/infos.txt", "r") as file:
+        content = file.read()
+    content = content.split("\n")
+    info_n = 0
+    for line in content:
+        if line and line[0] != '#':
+            info_n += 1
+            infos += f"{info_n}={line}\n"
+    return infos
+
 # constants
 BASE_X = 128
 MAX_X = 368
 WIDTH = MAX_X - BASE_X + 16
 
-output = "[save]\n"
 id = 0
 project_path = input("Project to open\n> ")
+output = infos_read(project_path) + "[save]\n"
 max_img, objects_ids = conf_read(project_path)
 img = 1
 

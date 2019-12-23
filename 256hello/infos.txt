@@ -1,0 +1,10 @@
+#music- area 1
+54
+
+#level name
+256x test
+
+#background- none
+99
+
+#motion sensor & darkness can be omited
